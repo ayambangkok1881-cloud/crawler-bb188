@@ -3,14 +3,14 @@
 
 const fs = require('fs');
 const path = require('path');
-const puppeteer = require('puppeteer');
+const puppeteer = require("puppeteer-core");
+const chromium = require("chromium");
 
 (async () => {
   const url = 'https://batubara188.com/#/index?category=lottery';
   console.log('🚀 Membuka browser dan menuju halaman:', url);
 
-const puppeteer = require("puppeteer-core");
-const chromium = require("chromium");
+
 
 
 console.log("🚀 Membuka browser dan menuju halaman...");

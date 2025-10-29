@@ -1,62 +1,27 @@
 import express from "express";
-import { exec } from "child_process";
-import fs from "fs";
-import path from "path";
+import { spawn } from "child_process";
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// variabel buat nyimpan hasil terbaru
-let latestData = null;
-let lastUpdated = null;
-
-// jalankan crawler pakai child_process
 function runCrawler() {
-  console.log("🕐 Menjalankan crawler...");
-  exec("node crawl_lottery.js", { cwd: path.resolve("./crawler") }, (err, stdout, stderr) => {
-    if (err) {
-      console.error("❌ Gagal menjalankan crawler:", err.message);
-      return;
-    }
-    if (stderr) console.error("⚠️ stderr:", stderr);
-    console.log(stdout);
+  console.log("⏳ Menjalankan crawler...");
+  const crawl = spawn("node", ["crawl_lottery.js"]);
 
-    // lokasi hasil JSON
-    const filePath = path.resolve("./crawler/public/json/lottery.json");
-    if (fs.existsSync(filePath)) {
-      try {
-        const raw = fs.readFileSync(filePath, "utf8");
-        const json = JSON.parse(raw);
-        latestData = json;
-        lastUpdated = new Date().toISOString();
-        console.log(`✅ Data diperbarui: ${lastUpdated}`);
-      } catch (e) {
-        console.error("❌ Gagal parse JSON:", e);
-      }
-    } else {
-      console.warn("⚠️ File JSON belum ditemukan:", filePath);
-    }
-  });
+  crawl.stdout.on("data", (data) => console.log(`📥 ${data}`));
+  crawl.stderr.on("data", (data) => console.error(`⚠️ ${data}`));
+  crawl.on("close", (code) => console.log(`✅ Crawl selesai dengan kode ${code}`));
 }
 
-// Jalankan pertama kali saat server start
+// jalankan saat server start
 runCrawler();
 
-// Jalankan ulang tiap 5 menit (5 * 60 * 1000)
+// ulangi tiap 5 menit
 setInterval(runCrawler, 5 * 60 * 1000);
 
-// Endpoint hasil JSON
-app.get("/json/lottery.json", (req, res) => {
-  if (!latestData) return res.status(503).json({ error: "Belum ada data" });
-  res.json({ updatedAt: lastUpdated, ...latestData });
-});
-
-// Root endpoint
+// endpoint supaya Render tetap hidup
 app.get("/", (req, res) => {
-  res.send("🟢 Crawler BB188 aktif — auto-refresh tiap 5 menit");
+  res.send("Crawler Batubara188 aktif 🟢");
 });
 
-// Jalankan server
-app.listen(PORT, () => {
-  console.log(`🚀 Server aktif di port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server berjalan di port ${PORT}`));

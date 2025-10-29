@@ -9,10 +9,18 @@ const puppeteer = require('puppeteer');
   const url = 'https://batubara188.com/#/index?category=lottery';
   console.log('🚀 Membuka browser dan menuju halaman:', url);
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+import puppeteer from "puppeteer-core";
+import chromium from "chromium";
+
+console.log("🚀 Membuka browser dan menuju halaman...");
+
+const browser = await puppeteer.launch({
+  executablePath: chromium.path, // gunakan Chromium portable
+  headless: true,
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+});
+
+
 
   try {
     const page = await browser.newPage();

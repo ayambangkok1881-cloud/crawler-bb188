@@ -30,8 +30,20 @@ const browser = await puppeteer.launch({
     );
 
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
-    console.log('⏳ Tunggu elemen hasil muncul...');
-    await new Promise(r => setTimeout(r, 5000));
+
+// 1) tunggu kartu lotere ter-mount
+console.log('⏳ Menunggu kartu lottery muncul...');
+await page.waitForSelector('.game-item.lottery', { timeout: 60000 });
+
+// 2) tunggu angka-angka terisi (DOM yang kita butuhkan benar-benar ada)
+await page.waitForFunction(
+  () => document.querySelectorAll('.game-item.lottery .lottery-number').length > 0,
+  { timeout: 60000 }
+);
+
+// 3) kasih buffer ekstra kecil supaya innerText final (hindari 0)
+await new Promise(r => setTimeout(r, 3000));
+
 
     // ====== SCRAPE MENTAH DARI DOM ======
     const data = await page.evaluate(() => {

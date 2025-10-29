@@ -9,8 +9,9 @@ const puppeteer = require('puppeteer');
   const url = 'https://batubara188.com/#/index?category=lottery';
   console.log('🚀 Membuka browser dan menuju halaman:', url);
 
-import puppeteer from "puppeteer-core";
-import chromium from "chromium";
+const puppeteer = require("puppeteer-core");
+const chromium = require("chromium");
+
 
 console.log("🚀 Membuka browser dan menuju halaman...");
 

@@ -1,5 +1,6 @@
-import express from "express";
-import { spawn } from "child_process";
+const express = require("express");
+const { spawn } = require("child_process");
+
 
 const app = express();
 const PORT = process.env.PORT || 10000;

@@ -2,13 +2,12 @@
   "name": "crawler-bb188",
   "version": "1.0.0",
   "main": "server.js",
-  "type": "module",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "puppeteer-core": "^24.2.0",
-    "chromium": "^3.0.2"
+    "chromium": "^3.0.2",
+    "puppeteer-core": "^24.2.0"
   }
 }

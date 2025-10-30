@@ -1,3 +1,4 @@
+import fs from "fs";
 import express from "express";
 import { spawn } from "child_process";
 import path from "path";
@@ -5,6 +6,16 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const jsonDir = path.join(__dirname, "public", "json");
+const lotteryPath = path.join(jsonDir, "lottery.json");
+fs.mkdirSync(jsonDir, { recursive: true });
+if (!fs.existsSync(lotteryPath)) {
+  fs.writeFileSync(
+    lotteryPath,
+    JSON.stringify({ status: "waiting", hint: "Call /run to generate data" }, null, 2),
+    "utf8"
+  );
+}
 
 const app = express();
 const PORT = process.env.PORT || 10000;

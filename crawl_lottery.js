@@ -107,7 +107,8 @@ const __dirname = path.dirname(__filename);
       markets: clean
     };
 
-    const outDir = path.resolve(__dirname, "../public/json");
+    const outDir = path.resolve(__dirname, "public/json");
+
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, "lottery.json"), JSON.stringify(payload, null, 2), "utf8");
     console.log(`✅ OK: saved ${payload.count} markets -> ${path.join(outDir, "lottery.json")}`);

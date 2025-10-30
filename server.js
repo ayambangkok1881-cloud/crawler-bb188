@@ -1,60 +1,49 @@
-// server.js (versi ESM final)
 import express from "express";
 import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Untuk environment ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// 1️⃣ Buka akses folder /public (supaya /json/status.json bisa diakses publik)
+// expose /public agar /json/*.json bisa diakses
 app.use(express.static(path.join(__dirname, "public")));
 
-// 2️⃣ Hindari overlap crawl (biar gak dobel)
 let isRunning = false;
-
 function runCrawler() {
   if (isRunning) {
-    console.log("⏳ Crawler masih berjalan, skip dulu...");
+    console.log("⏳ Crawler masih berjalan, skip dulu…");
     return;
   }
-
   isRunning = true;
-  console.log("🚀 Menjalankan crawler...");
+  console.log("🚀 Menjalankan crawler…");
 
-  const crawlerPath = path.join(__dirname, "crawler", "crawl_lottery.js");
+const crawlerPath = path.join(__dirname, "crawl_lottery.js");
   const child = spawn("node", [crawlerPath], {
     cwd: __dirname,
     env: process.env,
-    stdio: "pipe", // penting untuk log keluar di Render
+    stdio: "pipe",
   });
 
-  child.stdout.on("data", (data) => process.stdout.write(`📥 ${data}`));
-  child.stderr.on("data", (data) => process.stderr.write(`⚠️ ${data}`));
+  child.stdout.on("data", (d) => process.stdout.write(`📥 ${d}`));
+  child.stderr.on("data", (d) => process.stderr.write(`⚠️ ${d}`));
   child.on("close", (code) => {
-    console.log(`✅ Crawl selesai (kode keluar: ${code})`);
+    console.log(`✅ Crawl selesai (kode: ${code})`);
     isRunning = false;
   });
 }
 
-// 3️⃣ Endpoint utama (Render health check)
-app.get("/", (_req, res) => {
-  res.send("Crawler Batubara188 aktif 🟢");
-});
-
-// 4️⃣ Endpoint manual trigger (cron-job.org akan panggil ini)
+app.get("/", (_req, res) => res.send("Crawler Batubara188 aktif 🟢"));
 app.get("/run", (_req, res) => {
   runCrawler();
-  res.send("🕹️ Crawler dijalankan. Cek /json/status.json setelah beberapa detik.");
+  res.send("Crawl triggered. Cek /json/status.json nanti ya.");
 });
 
-// 5️⃣ Jalankan server
 app.listen(PORT, () => {
   console.log(`🌐 Server aktif di port ${PORT}`);
-  // Otomatis jalan pertama kali startup (opsional)
-  runCrawler();
+  // opsional: auto-run saat boot
+  // runCrawler();
 });

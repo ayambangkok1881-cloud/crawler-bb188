@@ -23,6 +23,7 @@ const PORT = process.env.PORT || 10000;
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
   next();
 });
 

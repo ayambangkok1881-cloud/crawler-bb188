@@ -4,16 +4,15 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "engines": {
-    "node": "20.11.1"
-  },
+  "engines": { "node": "20.11.1" },
   "scripts": {
     "start": "node server.js",
     "build": "vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "crawl": "node crawler/crawl_lottery.js"
   },
   "dependencies": {
-    "express": "^5.1.0",
+    "express": "^4.19.2",
     "puppeteer-core": "^22.8.0",
     "chromium": "^3.0.2",
     "axios": "^1.11.0"

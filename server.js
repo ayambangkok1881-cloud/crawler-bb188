@@ -66,3 +66,18 @@ app.listen(PORT, () => {
   // opsional: auto-run saat boot
   // runCrawler();
 });
+
+app.get("/status", (_req, res) => {
+  const p = path.join(__dirname, "public", "json", "lottery.json");
+  try {
+    const stat = fs.statSync(p);
+    res.json({
+      ok: true,
+      path: "/public/json/lottery.json",
+      mtime: stat.mtime,
+      size: stat.size
+    });
+  } catch {
+    res.json({ ok: false });
+  }
+});

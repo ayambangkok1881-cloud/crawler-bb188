@@ -1,31 +1,27 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "crawler-bb188",
   "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.19.2",
-    "chromium": "^3.0.2",
-    "puppeteer-core": "^24.2.0"
-  }
-}
-{
+  "private": true,
   "type": "module",
+  "engines": {
+    "node": "20.11.1"
+  },
   "scripts": {
+    "start": "node server.js",
     "build": "vite build",
-    "dev": "vite",
-    "start": "node server.js"
+    "dev": "vite"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^5.1.0",
+    "puppeteer-core": "^22.8.0",
+    "chromium": "^3.0.2",
+    "axios": "^1.11.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.19",
     "autoprefixer": "^10.4.21",
-    "axios": "^1.11.0",
     "concurrently": "^9.0.1",
     "laravel-vite-plugin": "^2.0.0",
     "postcss": "^8.5.6",

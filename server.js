@@ -1,9 +1,10 @@
-// server.js (versi ESM)
+// server.js (versi ESM final)
 import express from "express";
 import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 
+// Untuk environment ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -21,33 +22,39 @@ function runCrawler() {
     console.log("⏳ Crawler masih berjalan, skip dulu...");
     return;
   }
-  isRunning = true;
 
+  isRunning = true;
   console.log("🚀 Menjalankan crawler...");
+
   const crawlerPath = path.join(__dirname, "crawler", "crawl_lottery.js");
   const child = spawn("node", [crawlerPath], {
     cwd: __dirname,
     env: process.env,
+    stdio: "pipe", // penting untuk log keluar di Render
   });
 
   child.stdout.on("data", (data) => process.stdout.write(`📥 ${data}`));
   child.stderr.on("data", (data) => process.stderr.write(`⚠️ ${data}`));
-
   child.on("close", (code) => {
-    console.log(`✅ Crawl selesai (kode: ${code})`);
+    console.log(`✅ Crawl selesai (kode keluar: ${code})`);
     isRunning = false;
   });
 }
 
-// 3️⃣ Endpoint healthcheck (buat Render lihat “live”)
+// 3️⃣ Endpoint utama (Render health check)
 app.get("/", (_req, res) => {
   res.send("Crawler Batubara188 aktif 🟢");
 });
 
-// 4️⃣ Endpoint trigger (buat cron-job.org)
+// 4️⃣ Endpoint manual trigger (cron-job.org akan panggil ini)
 app.get("/run", (_req, res) => {
   runCrawler();
-  res.send("Crawl triggered. Cek /json/status.json nanti ya.");
+  res.send("🕹️ Crawler dijalankan. Cek /json/status.json setelah beberapa detik.");
 });
 
-app.listen(PORT, () => console.log(`🌐 Server aktif di port ${PORT}`));
+// 5️⃣ Jalankan server
+app.listen(PORT, () => {
+  console.log(`🌐 Server aktif di port ${PORT}`);
+  // Otomatis jalan pertama kali startup (opsional)
+  runCrawler();
+});
